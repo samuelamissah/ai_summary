@@ -20,7 +20,7 @@ const Hero = () => {
         </h1>
         <h2 className="sub_text desc">
             Kojo is a tool that uses the power of GPT-3 to summarize articles and
-            texts. It is built with React, Tailwind CSS, and OpenAI API.
+            texts. It is built with  OpenAI API.
         </h2>
     </header>
   );
