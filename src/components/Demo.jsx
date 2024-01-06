@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import {copy, linkIcon, loader, tick} from '../assets' // Import the deleteIcon from assets
 import { useLazyGetSummaryQuery } from '../services/article'
+import { MdDelete } from "react-icons/md"
 
 const Demo = () => {
     const [article, setArticle] = useState({
@@ -95,8 +96,7 @@ const Demo = () => {
                             <p className='flex-1 font-satoshi text-blue-600 font-medium text-sm truncate'>
                                 {item.url}
                             </p>
-                            <img
-                                src="./src/img/delete.png"
+                            <MdDelete
                                 alt='delete'
                                 className='w-[5%] h-[10%] object-contain cursor-pointer'
                                 onClick={(e) => {
