@@ -2,14 +2,43 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import {copy, linkIcon, loader, tick} from '../assets'
 import { useLazyGetSummaryQuery } from '../services/article'
+
+
+
+
 const Demo = () => {
+
     const [article, setArticle] = useState({
         summary: '',
         url: '',
     });
 
-    const handleSubmit = () => {
-        alert('submit')
+    const [allArticles, setAllArticles] = useState([]);
+
+const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
+
+useEffect(() => {
+    const articlesFromLocalStorage = JSON.parse( localStorage.getItem('articles'))
+    if (articlesFromLocalStorage) {
+        setAllArticles(articlesFromLocalStorage)
+    }
+} ,[])
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const {data} = await getSummary({articleUrl: article.url});
+
+        if (data?.summary) {
+            const newArticle = {...article, summary:data.summary};
+            const updatedArticles = [newArticle, ...allArticles];
+
+            setArticle(newArticle);
+            setAllArticles(updatedArticles);
+
+         localStorage.setItem('articles', JSON.stringify(updatedArticles))
+        }
+
     }
 
 
@@ -38,11 +67,60 @@ const Demo = () => {
 
 
           </form>
-          {/* History */}
+          <div className="flex flex-col gap-1 max-h-60 overflow-y-auto">
+          {allArticles.map((item, index) => (
+            <div
+              className="link_card"
+              key={`link-${index}`}
+              onClick={() => {
+                setArticle(item);
+              }}
+            >
+        <div className='copy_btn'>
+            <img
+                src={copy}
+                alt='copy'
+                className='w-[40%] h-[40%] object-contain'
+            />
+            </div>
+            <p className='flex-1 font-satoshi text-blue-600 font-medium text-sm truncate'>
+                {item.url}
+            </p>
+              
+            </div>
+          ))}
+    </div>
 
 
-        </div>
-        {/* Result */}
+            </div>
+    
+       <div className='my-10 max-w-full flex justify-center items-center'>
+              {
+                isFetching ? (
+                    <img src={loader} alt="loader" className="w-10 h-10 object-contain"/>
+                ) : error ? (
+                    <p className='font-inter font-bold text-blue text-center'>
+                        That wasn't supposed to occur. Please try again later.
+                    <br/>
+                    <span className="text-red-500 font-satoshi font-normal">
+                      erro?.data?.error
+                    </span>
+
+                    </p>
+                ) : (
+                    article.summary && (
+                    <div className='w-full flex flex-col gap-2'>
+                        <h2 className='font-satoshi font-bold'>
+                          Article  <span className='blue-gradient'>Summary</span>  
+                        </h2>
+                        </div>
+                )
+
+              )}
+
+
+       </div>
+       
 
     </section>
   )
