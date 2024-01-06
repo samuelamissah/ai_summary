@@ -96,7 +96,7 @@ const Demo = () => {
                                 {item.url}
                             </p>
                             <img
-                                src="./img/delete.png"
+                                src="./src/img/delete.png"
                                 alt='delete'
                                 className='w-[5%] h-[10%] object-contain cursor-pointer'
                                 onClick={(e) => {
